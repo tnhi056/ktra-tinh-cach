@@ -1,0 +1,314 @@
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Khảo sát Tính cách: Bạn là người Hướng nội hay Hướng ngoại?</title>
+    <!-- Import Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Import Google Fonts (Inter) -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Cấu hình Font mặc định cho Tailwind -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: '#6366f1',
+                        primaryHover: '#4f46e5',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #f3e8ff 0%, #e0e7ff 100%);
+            min-height: 100vh;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+
+        .slide-up {
+            animation: slideUp 0.5s ease-out forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Ẩn các section mặc định */
+        .hidden-section {
+            display: none !important;
+        }
+
+        .option-btn {
+            transition: all 0.2s ease-in-out;
+        }
+        
+        .option-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            border-color: #6366f1;
+            background-color: #f5f3ff;
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center p-4">
+
+    <div id="app" class="w-full max-w-2xl bg-white rounded-3xl shadow-xl overflow-hidden slide-up">
+        
+        <!-- MÀN HÌNH BẮT ĐẦU -->
+        <div id="start-screen" class="p-10 md:p-14 text-center">
+            <div class="mb-6 flex justify-center">
+                <span class="text-6xl">✨</span>
+            </div>
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4 tracking-tight">
+                Bạn là người Hướng nội hay Hướng ngoại?
+            </h1>
+            <p class="text-gray-600 mb-10 leading-relaxed">
+                Hãy trả lời 6 câu hỏi ngắn dưới đây bằng trực giác đầu tiên của bạn để khám phá xem tính cách thực sự của bạn thuộc nhóm nào nhé. Không có câu trả lời đúng hay sai, chỉ có câu trả lời phù hợp với bạn nhất!
+            </p>
+            <button onclick="startQuiz()" class="bg-primary hover:bg-primaryHover text-white font-semibold py-4 px-10 rounded-full text-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                Bắt đầu ngay 🚀
+            </button>
+        </div>
+
+        <!-- MÀN HÌNH CÂU HỎI -->
+        <div id="quiz-screen" class="hidden-section p-8 md:p-12">
+            <!-- Header của quiz: Thanh tiến trình & Số câu hỏi -->
+            <div class="mb-8">
+                <div class="flex justify-between items-center mb-2">
+                    <span id="question-counter" class="text-sm font-semibold text-gray-500 uppercase tracking-wider">
+                        Câu hỏi 1 / 6
+                    </span>
+                </div>
+                <!-- Progress Bar -->
+                <div class="w-full bg-gray-200 rounded-full h-2.5">
+                    <div id="progress-bar" class="bg-primary h-2.5 rounded-full transition-all duration-500" style="width: 16.66%"></div>
+                </div>
+            </div>
+
+            <!-- Nội dung câu hỏi -->
+            <div id="question-container" class="fade-in">
+                <h2 id="question-text" class="text-2xl font-bold text-gray-800 mb-6 leading-snug">
+                    <!-- Nội dung câu hỏi sẽ được render bằng JS -->
+                </h2>
+                
+                <!-- Danh sách đáp án -->
+                <div id="options-container" class="space-y-4">
+                    <!-- Các nút đáp án sẽ được render bằng JS -->
+                </div>
+            </div>
+        </div>
+
+        <!-- MÀN HÌNH KẾT QUẢ -->
+        <div id="result-screen" class="hidden-section p-10 md:p-14 text-center">
+            <div id="result-icon" class="text-6xl mb-6 flex justify-center animate-bounce">
+                <!-- Icon kết quả -->
+            </div>
+            <h3 class="text-gray-500 font-semibold tracking-widest uppercase mb-2">Kết quả của bạn là</h3>
+            <h1 id="result-title" class="text-4xl md:text-5xl font-extrabold text-gray-800 mb-6 text-transparent bg-clip-text bg-gradient-to-r from-primary to-purple-600">
+                <!-- Tiêu đề kết quả -->
+            </h1>
+            <div class="bg-indigo-50 rounded-2xl p-6 mb-10 border border-indigo-100">
+                <p id="result-desc" class="text-gray-700 leading-relaxed text-lg text-left">
+                    <!-- Mô tả kết quả -->
+                </p>
+            </div>
+            <button onclick="restartQuiz()" class="bg-gray-800 hover:bg-black text-white font-semibold py-3 px-8 rounded-full shadow transition-all duration-300">
+                Làm lại bài kiểm tra ↺
+            </button>
+        </div>
+
+    </div>
+
+    <script>
+        // Data Câu hỏi
+        // Điểm số: 1 (Hướng nội), 2 (Trung tính), 3 (Hướng ngoại)
+        const questions = [
+            {
+                question: "Sau một tuần làm việc mệt mỏi, bạn thường muốn dành ngày nghỉ cuối tuần như thế nào?",
+                options: [
+                    { text: "Ở nhà đọc sách, xem phim hoặc ngủ một giấc thật dài.", score: 1 },
+                    { text: "Đi cà phê nhẹ nhàng với 1-2 người bạn thân.", score: 2 },
+                    { text: "Tham gia các bữa tiệc, sự kiện hoặc đi quẩy chỗ đông người.", score: 3 }
+                ]
+            },
+            {
+                question: "Khi ở trong một đám đông những người xa lạ, bạn cảm thấy thế nào?",
+                options: [
+                    { text: "Khá lạc lõng và chỉ muốn tìm một góc khuất hoặc về sớm.", score: 1 },
+                    { text: "Bình thường, thỉnh thoảng sẽ bắt chuyện với người ngồi cạnh.", score: 2 },
+                    { text: "Rất hào hứng, đây là cơ hội tuyệt vời để làm quen bạn mới!", score: 3 }
+                ]
+            },
+            {
+                question: "Phong cách làm việc nhóm ưa thích của bạn là gì?",
+                options: [
+                    { text: "Được chia phần việc rõ ràng để tự làm một mình rồi gộp lại.", score: 1 },
+                    { text: "Hợp tác tốt cùng mọi người, nhưng vẫn cần không gian yên tĩnh để tập trung.", score: 2 },
+                    { text: "Thích bàn luận rôm rả, brainstorming liên tục cùng cả nhóm.", score: 3 }
+                ]
+            },
+            {
+                question: "Điện thoại của bạn đột nhiên đổ chuông từ một số lạ:",
+                options: [
+                    { text: "Mặc kệ không nghe, hoặc tra số rồi đợi họ nhắn tin.", score: 1 },
+                    { text: "Tùy tâm trạng lúc đó, rảnh thì nghe không thì thôi.", score: 2 },
+                    { text: "Nhấc máy ngay lập tức xem có chuyện gì.", score: 3 }
+                ]
+            },
+            {
+                question: "Lời khen nào khiến bạn cảm thấy vui vẻ nhất?",
+                options: [
+                    { text: "\"Bạn thật sâu sắc, tinh tế và thấu hiểu người khác.\"", score: 1 },
+                    { text: "\"Bạn rất dễ chịu, đáng tin cậy và linh hoạt.\"", score: 2 },
+                    { text: "\"Bạn thật năng động, nhiệt huyết và biết cách khuấy động không khí!\"", score: 3 }
+                ]
+            },
+            {
+                question: "Nếu phải đưa ra một quyết định quan trọng, bạn thường:",
+                options: [
+                    { text: "Suy nghĩ một mình thật kỹ, tự phân tích thiệt hơn.", score: 1 },
+                    { text: "Tham khảo ý kiến một vài người tin tưởng rồi tự quyết định.", score: 2 },
+                    { text: "Bàn bạc rầm rộ với nhiều người xung quanh để tìm hướng đi.", score: 3 }
+                ]
+            }
+        ];
+
+        // Biến trạng thái
+        let currentQuestionIndex = 0;
+        let totalScore = 0;
+
+        // Elements
+        const startScreen = document.getElementById('start-screen');
+        const quizScreen = document.getElementById('quiz-screen');
+        const resultScreen = document.getElementById('result-screen');
+        
+        const questionText = document.getElementById('question-text');
+        const optionsContainer = document.getElementById('options-container');
+        const questionCounter = document.getElementById('question-counter');
+        const progressBar = document.getElementById('progressBar');
+        const questionContainerElement = document.getElementById('question-container');
+
+        function startQuiz() {
+            startScreen.classList.add('hidden-section');
+            quizScreen.classList.remove('hidden-section');
+            currentQuestionIndex = 0;
+            totalScore = 0;
+            renderQuestion();
+        }
+
+        function renderQuestion() {
+            // Hiệu ứng fade in cho câu hỏi mới
+            questionContainerElement.classList.remove('fade-in');
+            void questionContainerElement.offsetWidth; // trigger reflow
+            questionContainerElement.classList.add('fade-in');
+
+            const currentQuestion = questions[currentQuestionIndex];
+            
+            // Cập nhật text và thanh tiến trình
+            questionCounter.innerText = `Câu hỏi ${currentQuestionIndex + 1} / ${questions.length}`;
+            const progressPercentage = ((currentQuestionIndex + 1) / questions.length) * 100;
+            document.getElementById('progress-bar').style.width = `${progressPercentage}%`;
+
+            // Đổ dữ liệu câu hỏi
+            questionText.innerText = currentQuestion.question;
+            optionsContainer.innerHTML = '';
+
+            // Đổ các đáp án
+            currentQuestion.options.forEach((option, index) => {
+                const button = document.createElement('button');
+                button.className = 'option-btn w-full text-left p-4 md:p-5 border-2 border-gray-100 rounded-xl bg-white text-gray-700 font-medium hover:border-primary focus:outline-none';
+                button.innerHTML = `
+                    <div class="flex items-center">
+                        <div class="w-8 h-8 rounded-full bg-gray-100 text-gray-500 flex items-center justify-center font-bold mr-4 shrink-0">
+                            ${String.fromCharCode(65 + index)}
+                        </div>
+                        <span>${option.text}</span>
+                    </div>
+                `;
+                button.onclick = () => selectOption(option.score);
+                optionsContainer.appendChild(button);
+            });
+        }
+
+        function selectOption(score) {
+            totalScore += score;
+            currentQuestionIndex++;
+
+            if (currentQuestionIndex < questions.length) {
+                renderQuestion();
+            } else {
+                showResult();
+            }
+        }
+
+        function showResult() {
+            quizScreen.classList.add('hidden-section');
+            resultScreen.classList.remove('hidden-section');
+            
+            // Thêm hiệu ứng slide up
+            resultScreen.classList.remove('slide-up');
+            void resultScreen.offsetWidth;
+            resultScreen.classList.add('slide-up');
+
+            const resultTitle = document.getElementById('result-title');
+            const resultDesc = document.getElementById('result-desc');
+            const resultIcon = document.getElementById('result-icon');
+
+            // Logic chấm điểm: Min = 6, Max = 18
+            // 6 - 9: Hướng nội (Introvert)
+            // 10 - 14: Hướng trung (Ambivert)
+            // 15 - 18: Hướng ngoại (Extrovert)
+
+            if (totalScore <= 9) {
+                resultIcon.innerText = "🎧";
+                resultTitle.innerText = "HƯỚNG NỘI";
+                resultDesc.innerHTML = `
+                    <b>Bạn là người Hướng nội (Introvert) chính hiệu!</b><br><br>
+                    Thế giới nội tâm của bạn cực kỳ phong phú. Bạn nạp năng lượng tốt nhất khi được ở một mình hoặc trong không gian yên tĩnh. Bạn suy nghĩ sâu sắc, quan sát tỉ mỉ và thường là một người bạn tâm giao tuyệt vời biết lắng nghe. Hãy cứ trân trọng sự bình yên của riêng mình nhé!
+                `;
+            } else if (totalScore >= 10 && totalScore <= 14) {
+                resultIcon.innerText = "⚖️";
+                resultTitle.innerText = "HƯỚNG TRUNG";
+                resultDesc.innerHTML = `
+                    <b>Bạn là người Hướng trung (Ambivert)!</b><br><br>
+                    Bạn có một sự cân bằng tuyệt vời! Tùy thuộc vào hoàn cảnh và những người xung quanh, bạn có thể tĩnh lặng, sâu sắc như người hướng nội, nhưng cũng có thể cởi mở, bùng nổ khi cần thiết như người hướng ngoại. Bạn linh hoạt và dễ dàng thích nghi với mọi môi trường.
+                `;
+            } else {
+                resultIcon.innerText = "🔥";
+                resultTitle.innerText = "HƯỚNG NGOẠI";
+                resultDesc.innerHTML = `
+                    <b>Bạn là người Hướng ngoại (Extrovert) rực rỡ!</b><br><br>
+                    Bạn nạp năng lượng từ việc giao tiếp, gặp gỡ mọi người và trải nghiệm những điều mới mẻ. Bạn nhiệt huyết, tỏa sáng trong các hoạt động tập thể và dễ dàng kết bạn. Nguồn năng lượng tích cực của bạn luôn có sức hút mạnh mẽ và lan tỏa đến những người xung quanh!
+                `;
+            }
+        }
+
+        function restartQuiz() {
+            resultScreen.classList.add('hidden-section');
+            startScreen.classList.remove('hidden-section');
+            
+            // Reset hiệu ứng màn hình bắt đầu
+            startScreen.classList.remove('slide-up');
+            void startScreen.offsetWidth;
+            startScreen.classList.add('slide-up');
+        }
+    </script>
+</body>
+</html>
